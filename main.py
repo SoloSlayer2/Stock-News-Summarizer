@@ -9,12 +9,20 @@ class URL(TypedDict):
     url:List[str]
     url_id:List[int]
 
-def url_check(url: str) -> bool:  # Changed to accept single string
+def url_check(url: str) -> bool:  
     if not url or url.strip() == "":
         return False
     if not validators.url(url):
         return False
     return True
+
+def clean_text_for_tts(text: str) -> str:
+    """Prepare the result from AI to be used by the TTS"""
+    import re
+    cleaned = re.sub(r"^[\*\-\•]\s+", "", text, flags=re.MULTILINE)
+    cleaned = cleaned.replace("*", "")
+    return cleaned
+
 
 def main():
     st.title("Stock News Summariser")
@@ -71,15 +79,17 @@ def main():
             st.write(results)
 
             if st.button("🔊 Listen to Summary"):
-                tts = gTTS(text=results, lang='en')
-                tts.save("summary.mp3")
+                try:
+                    cleaned_text = clean_text_for_tts(text=results)
+                    tts = gTTS(text=cleaned_text, lang='en')
+                    tts.save("summary.mp3")
+                    with open("summary.mp3", "rb") as audio_file:
+                        st.audio(audio_file.read(), format="audio/mp3")
+                    os.remove("summary.mp3")
 
-                audio_file = open("summary.mp3", "rb")
-                audio_bytes = audio_file.read()
-                st.audio(audio_bytes, format="audio/mp3")
+                except Exception as e:
+                    st.error(f"Error in generating or playing audio: {str(e)}")
 
-                # Optional: Clean up
-                os.remove("summary.mp3")
 
             if sources:
                 st.markdown("#### 🔗 Citations / Sources")
