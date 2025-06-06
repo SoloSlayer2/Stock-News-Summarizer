@@ -13,6 +13,7 @@ This app summarizes the latest news from URLs provided by the user, specifically
 - 📝 Generate bullet-point summaries using `Mistral` model via `ChatOllama`
 - 📌 Display source links (citations) for traceability
 - 🧹 Reset the app with one click
+- 🔊 Text-to-Speech: Listen to summaries directly in the app using Google's TTS
 
 ---
 ## 🛠️ Requirements

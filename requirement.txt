@@ -4,3 +4,4 @@ langchain_community>=0.0.20
 langchain_ollama>=0.0.4
 faiss-cpu>=1.7.4
 validators>=0.20.0
+gTTS>=2.3.2
