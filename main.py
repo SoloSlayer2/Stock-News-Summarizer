@@ -2,6 +2,8 @@ import validators
 import streamlit as st
 from typing import List,TypedDict
 from Stock_News_Summarizer import NewsSummarizer
+from gtts import gTTS
+import os
 
 class URL(TypedDict):
     url:List[str]
@@ -67,6 +69,17 @@ def main():
         
             st.header("📝 Summary")
             st.write(results)
+
+            if st.button("🔊 Listen to Summary"):
+                tts = gTTS(text=results, lang='en')
+                tts.save("summary.mp3")
+
+                audio_file = open("summary.mp3", "rb")
+                audio_bytes = audio_file.read()
+                st.audio(audio_bytes, format="audio/mp3")
+
+                # Optional: Clean up
+                os.remove("summary.mp3")
 
             if sources:
                 st.markdown("#### 🔗 Citations / Sources")
